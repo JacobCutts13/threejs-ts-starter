@@ -3,7 +3,12 @@ import {
     Mesh,
     MeshStandardMaterial,
     BoxBufferGeometry,
+    TetrahedronGeometry,
+    TorusGeometry,
+    BoxGeometry,
+
 } from 'three';
+import { createAddBoxCluster } from './boxCluster';
 import { setupCamera } from './setupCamera';
 import { setupHelpers } from './setupHelpers';
 import { setupLights } from './setupLights';
@@ -27,23 +32,23 @@ export function setupThreeJSScene() {
     setupHelpers(scene);
 
     //shape(s)
-    const geometry = new BoxBufferGeometry(10, 10, 10);
-    const material = new MeshStandardMaterial({
-        color: 0xff00ff
-    });
-
-    let myShape: Mesh = new Mesh(geometry, material);
-    myShape.position.y = 20;
-    scene.add(myShape);
-
+    const boxArray = createAddBoxCluster(scene, 20, 50);
 
     animate();
 
 
     function animate() {
-        myShape.rotation.y += 0.01;
-        myShape.rotation.x += 0.02;
-
+        // centreCube.rotation.y += 0.01;
+        // centreCube.rotation.x += 0.02;
+        for (let box of boxArray) {
+            box.rotation.x += box.userData.speed * 0.01;
+            // box.rotation.y += (Math.random() - 0.5) * 0.1 * Math.PI;
+            // box.rotation.z += (Math.random() - 0.5) * 0.1 * Math.PI;
+        }
+        const infoEl = document.getElementById('info')
+        if (infoEl) {
+            infoEl.innerText = "First box rotation:" + boxArray[0].rotation.x.toFixed(1);
+        }
         renderer.render(scene, camera);
 
         // required if controls.enableDamping or controls.autoRotate are set to true
