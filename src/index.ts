@@ -6,16 +6,18 @@ import {
     TetrahedronGeometry,
     TorusGeometry,
     BoxGeometry,
+    Group,
 
 } from 'three';
 import { createAddBoxCluster } from './boxCluster';
+import { loadModel } from './loadModel';
 import { setupCamera } from './setupCamera';
 import { setupHelpers } from './setupHelpers';
 import { setupLights } from './setupLights';
 import { setupOrbitControls } from './setupOrbitControls';
 import { setupRenderer } from './setupRenderer';
 
-export function setupThreeJSScene() {
+export async function setupThreeJSScene() {
 
     let dimensions = { w: window.innerWidth, h: window.innerHeight };
 
@@ -34,6 +36,13 @@ export function setupThreeJSScene() {
     //shape(s)
     const boxArray = createAddBoxCluster(scene, 20, 50);
 
+    const model: Group | null = await loadModel("./assets/model.gltf")
+
+    if (model) {
+        model.scale.set(5, 5, 5)
+        scene.add(model);
+    }
+
     animate();
 
 
@@ -42,8 +51,7 @@ export function setupThreeJSScene() {
         // centreCube.rotation.x += 0.02;
         for (let box of boxArray) {
             box.rotation.x += box.userData.speed * 0.01;
-            // box.rotation.y += (Math.random() - 0.5) * 0.1 * Math.PI;
-            // box.rotation.z += (Math.random() - 0.5) * 0.1 * Math.PI;
+
         }
         const infoEl = document.getElementById('info')
         if (infoEl) {
