@@ -25,7 +25,7 @@ export async function setupThreeJSScene() {
 
     const renderer = setupRenderer(camera, dimensions);
 
-    const controls = setupOrbitControls(camera, renderer.domElement);
+    // const controls = setupOrbitControls(camera, renderer.domElement);
 
     let scene = new Scene();
 
@@ -34,35 +34,44 @@ export async function setupThreeJSScene() {
     setupHelpers(scene);
 
     //shape(s)
-    const boxArray = createAddBoxCluster(scene, 20, 50);
+    // const boxArray = createAddBoxCluster(scene, 20, 50);
 
     const model: Group | null = await loadModel("./assets/model.gltf")
 
     if (model) {
         model.scale.set(5, 5, 5)
+        model.rotation.y += Math.PI;
         scene.add(model);
     }
 
-    animate();
+    let frameCount = 0;
 
+    animate();
 
     function animate() {
         // centreCube.rotation.y += 0.01;
         // centreCube.rotation.x += 0.02;
-        for (let box of boxArray) {
-            box.rotation.x += box.userData.speed * 0.01;
-
+        // for (let box of boxArray) {
+        //     box.rotation.x += box.userData.speed * 0.01;
+        // }
+        if (model) {
+            model.position.z -= 0.1;
+            camera.position.z = model.position.z + 30 * Math.sin(frameCount / 200);
+            camera.position.x = model.position.x + 30 * Math.cos(frameCount / 200)
+            camera.lookAt(model.position);
         }
         const infoEl = document.getElementById('info')
         if (infoEl) {
-            infoEl.innerText = "First box rotation:" + boxArray[0].rotation.x.toFixed(1);
+            infoEl.innerText = "Moving car";
         }
         renderer.render(scene, camera);
 
         // required if controls.enableDamping or controls.autoRotate are set to true
-        controls.update();
+        // controls.update();
 
         requestAnimationFrame(animate);
+
+        frameCount++;
     }
 }
 
