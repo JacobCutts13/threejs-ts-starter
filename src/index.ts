@@ -34,8 +34,8 @@ let camera: PerspectiveCamera,
   renderer: WebGLRenderer;
 let mesh, texture;
 
-const worldWidth = 256,
-  worldDepth = 256;
+const worldWidth = 512,
+  worldDepth = 512;
 const clock = new Clock();
 
 init();
@@ -54,7 +54,7 @@ function init() {
   scene = new Scene();
   setupLights(scene);
   scene.background = new Color(0x000000);
-  scene.fog = new FogExp2(0xefd1b5, 0.0005);
+  scene.fog = new FogExp2(0xadb8c5, 0.0005);
 
   const data = generateHeight(worldWidth, worldDepth);
 
@@ -82,7 +82,7 @@ function init() {
 
   mesh = new Mesh(
     geometry,
-    new MeshStandardMaterial({ flatShading: true, color: 0xff0000 }),
+    new MeshStandardMaterial({ flatShading: true, color: 0x003f64 }),
   ); //map: texture
   scene.add(mesh);
 
